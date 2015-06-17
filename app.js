@@ -19,7 +19,7 @@ app.get('/data', (req, res) => {
         values: {
           date_histogram: {
             field: 'time',
-            interval: '1M',
+            interval: '1d',
             format: 'yyyy-MM-dd'
           },
           aggs: {
