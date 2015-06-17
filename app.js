@@ -26,6 +26,6 @@ app.get('/data', (req, res) => {
   }).pipe(res);
 });
 
-app.listen(3000, function () {
+app.listen(config.port, function () {
   console.log(this.address());
 });
