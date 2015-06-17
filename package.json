@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "server": "babel-node --stage 0 app",
+    "server": "node requirehook",
     "develop": "nodemon --ignore node_modules --exec npm run server -- app.js"
   },
   "dependencies": {
