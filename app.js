@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 app.get('/data', (req, res) => {
   const query = new Buffer(req.query.query, 'base64').toString();
   request({
-    method: 'GET', url: config.elasticsearchUrl,
+    method: 'GET', url: `${config.elasticsearchHost}/jdbc/_search`,
     body: query
   }).pipe(res);
 });
