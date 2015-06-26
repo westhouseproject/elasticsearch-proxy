@@ -12,24 +12,10 @@ app.use((req, res, next) => {
 
 
 app.get('/data', (req, res) => {
+  const query = new Buffer(req.query.query, 'base64').toString();
   request({
     method: 'GET', url: config.elasticsearchUrl,
-    body: JSON.stringify({
-      aggs: {
-        values: {
-          date_histogram: {
-            field: 'time',
-            interval: '1d',
-            format: 'yyyy-MM-dd'
-          },
-          aggs: {
-            consumption: {
-              avg: { 'field': 'value' }
-            }
-          }
-        }
-      }
-    })
+    body: query
   }).pipe(res);
 });
 
