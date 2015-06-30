@@ -11,10 +11,10 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/data', (req, res) => {
+app.get('/:index', (req, res) => {
   const query = new Buffer(req.query.query, 'base64').toString();
   request({
-    method: 'GET', url: `${config.elasticsearchHost}/jdbc/_search`,
+    method: 'GET', url: `${config.elasticsearchHost}/${query.params.index}`,
     body: query
   }).pipe(res);
 });
