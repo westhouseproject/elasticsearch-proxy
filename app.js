@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 app.get('/:index', (req, res) => {
   const query = new Buffer(req.query.query, 'base64').toString();
   request({
-    method: 'GET', url: `${config.elasticsearchHost}/${query.params.index}`,
+    method: 'GET', url: `${config.elasticsearchHost}/${req.params.index}`,
     body: query
   }).pipe(res);
 });
