@@ -10,14 +10,52 @@ app.use((req, res, next) => {
   next();
 });
 
+const cache = {};
 
 app.use((req, res) => {
   const { path } = req;
-  const query = new Buffer(req.query.query, 'base64').toString();
-  request({
-    method: 'GET', url: `${config.elasticsearchHost}/${path}`,
-    body: query
-  }).pipe(res);
+  const preQuery = req.query.query;
+  const query = new Buffer(preQuery, 'base64').toString();
+  const toCache = `${path}${preQuery}`;
+  try {
+    request({
+      method: 'GET', url: `${config.elasticsearchHost}/${path}`,
+      body: query
+    }, function (err, response) {
+      res.set('Content-Type', 'application/json');
+
+      if (err) {
+        if (!cache[toCache]) {
+          res.status(500).send({error: err.message});
+          return;
+        }
+
+        res.send(cache[toCache]);
+        return;
+      }
+
+      if (response.statusCode > 399) {
+        if (!cache[toCache]) {
+          res.status(response.statusCode);
+          res.send(response.body);
+          return;
+        }
+
+        res.send(cache[toCache]);
+        return;
+      }
+
+      cache[toCache] = response.body;
+      res.send(response.body);
+    });
+  } catch (e) {
+    if (!cache[toCache]) {
+      res.status(500).send({error: e.message});
+      return;
+    }
+
+    res.send
+  }
 });
 
 app.listen(config.port, function () {
